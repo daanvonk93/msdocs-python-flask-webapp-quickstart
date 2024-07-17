@@ -1,4 +1,5 @@
 import os
+import klad
 
 from flask import (Flask, redirect, render_template, request,
                    send_from_directory, url_for)
@@ -26,7 +27,19 @@ def hello():
    else:
        print('Request for hello page received with no name or blank name -- redirecting')
        return redirect(url_for('index'))
+   
 
-
+@app.route('/getsecret', methods=['POST'])
+def getsecret():
+    my_secret = request.form.get('getsecret')
+    print('Request for getsecret page received with secret=%s' % my_secret)
+    try:
+        keyvault_connection = klad.get_keyvault_connection("https://al-4tg-kv-learningvnet.vault.azure.net/")
+        my_secret = keyvault_connection.get_secret("MySecret").value
+        return render_template('seesecret.html', secret = my_secret)
+    except Exception as e:
+        print(e)
+        return render_template('seesecret.html', secret = e)
+        
 if __name__ == '__main__':
    app.run()
