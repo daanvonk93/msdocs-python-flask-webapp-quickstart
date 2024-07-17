@@ -1,9 +1,8 @@
 import os
-from typing import Union
 from azure.keyvault.secrets import SecretClient
 from azure.identity import ManagedIdentityCredential, InteractiveBrowserCredential
 
-def get_credentials() -> Union[ManagedIdentityCredential, InteractiveBrowserCredential]:
+def get_credentials():
     # Check if the code is running in the cloud (Azure App Service, Azure Functions, etc.)
     if "WEBSITE_SITE_NAME" in os.environ:
         credential = ManagedIdentityCredential()
